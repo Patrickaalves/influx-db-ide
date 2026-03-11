@@ -1,0 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+:root {
+  --sidebar-width: 250px;
+  --primary-color: #2196F3;
+  --secondary-color: #1976D2;
+  --background-color: #f5f5f5;
+  --sidebar-bg: #263238;
+  --sidebar-hover: #37474f;
+  --text-light: #ffffff;
+  --border-color: #ddd;
+}

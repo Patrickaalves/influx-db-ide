@@ -1,0 +1,102 @@
+<div class="configuration-container">
+  <div class="config-header">
+    <h1>Configurações do InfluxDB</h1>
+    <p>Configure a conexão com o seu servidor InfluxDB 1.8</p>
+  </div>
+
+  <div class="config-form">
+    <div class="form-group">
+      <label for="url">URL do Servidor *</label>
+      <input
+        type="text"
+        id="url"
+        [(ngModel)]="config.url"
+        placeholder="http://localhost:8086"
+        class="form-control"
+      />
+      <small class="form-help">Exemplo: http://localhost:8086 ou http://192.168.1.100:8086</small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="username">Usuário</label>
+        <input
+          type="text"
+          id="username"
+          [(ngModel)]="config.username"
+          placeholder="admin"
+          class="form-control"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Senha</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="config.password"
+          placeholder="••••••••"
+          class="form-control"
+        />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="database">Database Padrão</label>
+      <input
+        type="text"
+        id="database"
+        [(ngModel)]="config.database"
+        placeholder="mydb"
+        class="form-control"
+      />
+      <small class="form-help">Opcional: database que será selecionado por padrão</small>
+    </div>
+
+    <div class="test-connection" *ngIf="testStatus !== 'idle'">
+      <div class="test-result" [ngClass]="testStatus">
+        <span class="test-icon">
+          <span *ngIf="testStatus === 'testing'">⏳</span>
+          <span *ngIf="testStatus === 'success'">✅</span>
+          <span *ngIf="testStatus === 'error'">❌</span>
+        </span>
+        <span class="test-message">{{ testMessage }}</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        class="btn btn-secondary"
+        (click)="testConnection()"
+        [disabled]="!config.url || testStatus === 'testing'"
+      >
+        {{ testStatus === 'testing' ? 'Testando...' : 'Testar Conexão' }}
+      </button>
+
+      <button
+        class="btn btn-primary"
+        (click)="saveConfiguration()"
+        [disabled]="!config.url || isSaving"
+      >
+        {{ isSaving ? 'Salvando...' : 'Salvar Configurações' }}
+      </button>
+
+      <button
+        class="btn btn-danger"
+        (click)="clearConfiguration()"
+      >
+        Limpar
+      </button>
+    </div>
+  </div>
+
+  <div class="config-info">
+    <h3>Informações</h3>
+    <ul>
+      <li>Esta aplicação suporta InfluxDB versão 1.8</li>
+      <li>A URL deve incluir o protocolo (http:// ou https://)</li>
+      <li>Credenciais são armazenadas localmente no navegador</li>
+      <li>Teste a conexão antes de salvar as configurações</li>
+    </ul>
+  </div>
+</div>

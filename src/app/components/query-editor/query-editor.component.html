@@ -1,0 +1,218 @@
+<div class="query-editor-container">
+  <!-- Database and Measurements Selection (Horizontal) -->
+  <div class="database-selection-panel">
+    <app-database-list
+      (databaseSelected)="onDatabaseSelected($event)"
+      (measurementSelected)="onMeasurementSelected($event)"
+    ></app-database-list>
+  </div>
+
+  <!-- Editor Section -->
+  <div class="editor-section">
+    <div class="query-header">
+      <h2>Editor de Consultas</h2>
+      <div class="selected-info" *ngIf="selectedDatabase">
+        <span class="info-label">Database:</span>
+        <span class="info-value">{{ selectedDatabase }}</span>
+        <span class="info-label" *ngIf="selectedMeasurement">/ Measurement:</span>
+        <span class="info-value" *ngIf="selectedMeasurement">{{ selectedMeasurement }}</span>
+      </div>
+    </div>
+
+      <!-- Query Builder Section -->
+      <div class="query-builder" *ngIf="selectedMeasurement">
+        <h3>Construtor de Consulta</h3>
+
+        <!-- Time Range -->
+        <div class="builder-section">
+          <label>Período de Tempo:</label>
+          <div class="time-range-controls">
+            <select [(ngModel)]="timeRange" (ngModelChange)="buildQuery()" class="form-control">
+              <option value="">Todos os dados</option>
+              <option value="last_5m">Últimos 5 minutos</option>
+              <option value="last_15m">Últimos 15 minutos</option>
+              <option value="last_1h">Última 1 hora</option>
+              <option value="last_6h">Últimas 6 horas</option>
+              <option value="last_24h">Últimas 24 horas</option>
+              <option value="last_7d">Últimos 7 dias</option>
+              <option value="custom">Personalizado</option>
+            </select>
+
+            <div class="custom-time" *ngIf="timeRange === 'custom'">
+              <input
+                type="datetime-local"
+                [(ngModel)]="customTimeStart"
+                (ngModelChange)="buildQuery()"
+                class="form-control"
+                placeholder="Início"
+              />
+              <span>até</span>
+              <input
+                type="datetime-local"
+                [(ngModel)]="customTimeEnd"
+                (ngModelChange)="buildQuery()"
+                class="form-control"
+                placeholder="Fim"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tag Filters -->
+        <div class="builder-section">
+          <div class="section-header">
+            <label>Filtros por Tag:</label>
+            <button
+              class="btn-add-filter"
+              (click)="addTagFilter()"
+              [disabled]="availableTagKeys.length === 0"
+              title="Adicionar filtro"
+            >
+              + Adicionar Filtro
+            </button>
+          </div>
+
+          <div class="loading-tags" *ngIf="isLoadingTagKeys">
+            <span>⏳ Carregando tags...</span>
+          </div>
+
+          <div class="tag-filters-list" *ngIf="tagFilters.length > 0">
+            <div class="tag-filter" *ngFor="let filter of tagFilters; let i = index">
+              <select
+                [(ngModel)]="filter.key"
+                (ngModelChange)="onTagKeyChange(filter, i)"
+                class="form-control filter-key"
+              >
+                <option value="">Selecione uma tag</option>
+                <option *ngFor="let tagKey of availableTagKeys" [value]="tagKey.key">
+                  {{ tagKey.key }}
+                </option>
+              </select>
+
+              <span class="filter-separator">=</span>
+
+              <select
+                [(ngModel)]="filter.value"
+                (ngModelChange)="onTagValueChange()"
+                [disabled]="!filter.key || isLoadingTagValues[filter.key]"
+                class="form-control filter-value"
+              >
+                <option value="">Selecione um valor</option>
+                <option
+                  *ngFor="let tagValue of tagValues[filter.key]"
+                  [value]="tagValue.value"
+                >
+                  {{ tagValue.value }}
+                </option>
+              </select>
+
+              <button class="btn-remove-filter" (click)="removeTagFilter(i)" title="Remover filtro">
+                ✕
+              </button>
+            </div>
+          </div>
+
+          <div class="no-tags" *ngIf="availableTagKeys.length === 0 && !isLoadingTagKeys">
+            <span>Nenhuma tag disponível para este measurement</span>
+          </div>
+        </div>
+
+        <!-- Limit -->
+        <div class="builder-section">
+          <label>Limite de Resultados:</label>
+          <input
+            type="number"
+            [(ngModel)]="limitValue"
+            (ngModelChange)="buildQuery()"
+            min="1"
+            max="10000"
+            class="form-control limit-input"
+          />
+        </div>
+      </div>
+
+      <!-- Query Editor -->
+      <div class="query-input-section">
+        <div class="input-header">
+          <label>Consulta InfluxQL:</label>
+          <button class="btn-clear" (click)="clearQuery()">Limpar</button>
+        </div>
+        <textarea
+          [(ngModel)]="query"
+          placeholder="Digite sua consulta InfluxQL aqui...&#10;&#10;Exemplo: SELECT * FROM &quot;measurement_name&quot; WHERE time > now() - 1h LIMIT 100"
+          class="query-textarea"
+          rows="6"
+        ></textarea>
+      </div>
+
+      <!-- Execute Button -->
+      <div class="query-actions">
+        <button
+          class="btn-execute"
+          (click)="executeQuery()"
+          [disabled]="!selectedDatabase || !query.trim() || isExecuting"
+        >
+          <span class="btn-icon">{{ isExecuting ? '⏳' : '▶️' }}</span>
+          <span>{{ isExecuting ? 'Executando...' : 'Executar Consulta' }}</span>
+        </button>
+      </div>
+
+      <!-- Error Display -->
+      <div class="error-display" *ngIf="error">
+        <span class="error-icon">⚠️</span>
+        <span>{{ error }}</span>
+      </div>
+
+      <!-- Results Display -->
+      <div class="results-section" [class.fullscreen]="isResultsFullscreen" *ngIf="queryResult">
+        <div class="results-header">
+          <div class="header-left">
+            <h3>{{ isResultsFullscreen ? '📊 Resultados - Tela Cheia' : 'Resultados' }}</h3>
+            <span class="results-count" *ngIf="hasResults()">
+              {{ getRows().length }} registro(s)
+            </span>
+            <span class="fullscreen-hint" *ngIf="isResultsFullscreen">
+              Pressione ESC ou clique no botão para sair
+            </span>
+          </div>
+          <div class="header-actions" *ngIf="hasResults()">
+            <button 
+              class="btn-action btn-fullscreen" 
+              (click)="toggleFullscreen()"
+              [title]="isResultsFullscreen ? 'Sair da tela cheia (ESC)' : 'Expandir tela cheia'"
+            >
+              <span *ngIf="!isResultsFullscreen">⛶</span>
+              <span *ngIf="isResultsFullscreen">✕</span>
+            </button>
+            <button 
+              class="btn-action" 
+              (click)="openInNewWindow()"
+              title="Abrir em nova janela"
+              *ngIf="!isResultsFullscreen"
+            >
+              🗗
+            </button>
+          </div>
+        </div>
+
+        <div class="results-table-container" *ngIf="hasResults()">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th *ngFor="let column of getColumns()">{{ column }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of getRows()">
+                <td *ngFor="let cell of row">{{ cell }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="no-results" *ngIf="!hasResults() && !error">
+          <p>Nenhum resultado encontrado</p>
+        </div>
+      </div>
+  </div>
+</div>

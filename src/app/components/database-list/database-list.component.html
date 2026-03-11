@@ -1,0 +1,122 @@
+<div class="database-list-container">
+  <!-- Databases Section -->
+  <div class="databases-section">
+    <div class="section-header">
+      <h3>Databases</h3>
+      <button class="btn-refresh" (click)="refresh()" [disabled]="isLoadingDatabases" title="Atualizar">
+        🔄
+      </button>
+    </div>
+
+    <div class="error-message" *ngIf="error">
+      <span class="error-icon">⚠️</span>
+      <span>{{ error }}</span>
+    </div>
+
+    <div class="loading" *ngIf="isLoadingDatabases">
+      <span class="spinner">⏳</span>
+      <span>Carregando...</span>
+    </div>
+
+    <div class="databases-list" *ngIf="!isLoadingDatabases && !error">
+      <div
+        *ngFor="let db of databases"
+        class="database-item"
+        [class.selected]="selectedDatabase === db.name"
+        (click)="selectDatabase(db.name)"
+      >
+        <span class="db-icon">🗄️</span>
+        <span class="db-name">{{ db.name }}</span>
+      </div>
+
+      <div class="empty-state" *ngIf="databases.length === 0">
+        <p>Nenhum database</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Measurements Section -->
+  <div class="measurements-section" *ngIf="selectedDatabase">
+    <div class="section-header">
+      <h3>Measurements</h3>
+      <div class="measurements-count" *ngIf="measurements.length > 0">
+        {{ filteredMeasurements.length }} / {{ measurements.length }}
+      </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-filters">
+      <div class="search-box">
+        <input
+          type="text"
+          [(ngModel)]="measurementSearchText"
+          placeholder="🔍 Buscar measurement..."
+          class="search-input"
+        />
+        <button 
+          *ngIf="measurementSearchText" 
+          class="btn-clear-search" 
+          (click)="clearSearch()"
+          title="Limpar busca"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="filter-buttons">
+        <button
+          class="filter-btn"
+          [class.active]="prefixFilters.system"
+          (click)="toggleFilter('system')"
+          title="Ocultar measurements system_*"
+        >
+          <span class="filter-icon">{{ prefixFilters.system ? '�' : '👁️' }}</span>
+          Ocultar system_*
+        </button>
+        <button
+          class="filter-btn"
+          [class.active]="prefixFilters.service"
+          (click)="toggleFilter('service')"
+          title="Ocultar measurements service_*"
+        >
+          <span class="filter-icon">{{ prefixFilters.service ? '🚫' : '👁️' }}</span>
+          Ocultar service_*
+        </button>
+        <button
+          class="filter-btn filter-show"
+          [class.active]="prefixFilters.rabbit"
+          (click)="toggleFilter('rabbit')"
+          title="Mostrar apenas measurements rabbit*"
+        >
+          <span class="filter-icon">{{ prefixFilters.rabbit ? '🐰' : '📋' }}</span>
+          {{ prefixFilters.rabbit ? 'Mostrando' : 'Mostrar' }} rabbit*
+        </button>
+      </div>
+    </div>
+
+    <div class="loading" *ngIf="isLoadingMeasurements">
+      <span class="spinner">⏳</span>
+      <span>Carregando measurements...</span>
+    </div>
+
+    <div class="measurements-list" *ngIf="!isLoadingMeasurements">
+      <div
+        *ngFor="let measurement of filteredMeasurements"
+        class="measurement-item"
+        [class.selected]="selectedMeasurement === measurement.name"
+        (click)="selectMeasurement(measurement.name)"
+      >
+        <span class="measurement-icon">📈</span>
+        <span class="measurement-name">{{ measurement.name }}</span>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredMeasurements.length === 0 && measurements.length > 0">
+        <p>Nenhum measurement encontrado com os filtros aplicados</p>
+      </div>
+
+      <div class="empty-state" *ngIf="measurements.length === 0">
+        <p>Nenhum measurement encontrado</p>
+      </div>
+    </div>
+  </div>
+</div>

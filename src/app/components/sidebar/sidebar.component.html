@@ -1,0 +1,34 @@
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h2>InfluxDB IDE</h2>
+    <div class="connection-status" [class.connected]="isConnected">
+      <span class="status-dot"></span>
+      <span class="status-text">{{ isConnected ? 'Conectado' : 'Desconectado' }}</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <a routerLink="/query" routerLinkActive="active" class="nav-item">
+      <span class="icon">📊</span>
+      <span class="label">Editor de Consultas</span>
+    </a>
+
+    <a routerLink="/configuration" routerLinkActive="active" class="nav-item">
+      <span class="icon">⚙️</span>
+      <span class="label">Configurações</span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer" *ngIf="currentConfig">
+    <div class="config-info">
+      <div class="info-item">
+        <span class="info-label">URL:</span>
+        <span class="info-value">{{ currentConfig.url }}</span>
+      </div>
+      <div class="info-item" *ngIf="currentConfig.database">
+        <span class="info-label">Database:</span>
+        <span class="info-value">{{ currentConfig.database }}</span>
+      </div>
+    </div>
+  </div>
+</aside>
