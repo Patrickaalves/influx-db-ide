@@ -1,595 +1,358 @@
-<div align="center">
+# InfluxDB IDE
 
-# 🚀 InfluxDB IDE
+Interface web moderna para consultar e gerenciar bancos de dados **InfluxDB 1.8**, desenvolvida com **Angular 18** e **TypeScript**.
 
-### Interface Web Moderna para Consultar e Gerenciar InfluxDB 1.8
-
-[![Angular](https://img.shields.io/badge/Angular-18.0-DD0031?style=for-the-badge&logo=angular&logoColor=white)](https://angular.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![InfluxDB](https://img.shields.io/badge/InfluxDB-1.8-22ADF6?style=for-the-badge&logo=influxdb&logoColor=white)](https://www.influxdata.com/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-
-[Funcionalidades](#-funcionalidades) •
-[Instalação](#-instalação) •
-[Como Usar](#-como-usar) •
-[Documentação](#-documentação) •
-[Contribuir](#-contribuindo)
-
-![InfluxDB IDE](https://via.placeholder.com/800x400/1e293b/22ADF6?text=InfluxDB+IDE+Screenshot)
-
-</div>
+![Angular](https://img.shields.io/badge/Angular-18.0-DD0031?logo=angular&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript&logoColor=white)
+![InfluxDB](https://img.shields.io/badge/InfluxDB-1.8-22ADF6?logo=influxdb&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## 📖 Sobre o Projeto
+## Índice
 
-**InfluxDB IDE** é uma interface gráfica completa e intuitiva para interagir com bancos de dados InfluxDB 1.8. Desenvolvida com Angular 18 e TypeScript, oferece uma experiência moderna e produtiva para consultar, filtrar e visualizar dados de séries temporais.
-
-### 🎯 Por que usar?
-
-- ✨ **Interface Moderna** - Design limpo e responsivo
-- ⚡ **Rápido e Eficiente** - Consultas em tempo real
-- 🔍 **Filtros Avançados** - Busca por tags, tempo e measurements
-- 📊 **Visualização Poderosa** - Tela cheia, exportação CSV e impressão
-- 🔒 **Seguro** - Credenciais armazenadas localmente no navegador
-- 🎨 **Personalizável** - Construtor visual de consultas InfluxQL
-
----
-
-## ✨ Funcionalidades
-
-<table>
-<tr>
-<td width="50%">
-
-### 🔌 Configuração e Conexão
-- ✅ Configuração de URL do servidor
-- ✅ Autenticação com usuário e senha
-- ✅ Teste de conexão em tempo real
-- ✅ Persistência de configurações
-- ✅ Indicador visual de status
-
-### 📚 Gerenciamento de Databases
-- ✅ Listagem de todos os databases
-- ✅ Visualização de measurements
-- ✅ Seleção rápida via interface
-- ✅ Atualização automática de dados
-
-### 🔍 Sistema de Filtros
-- ✅ Busca por texto
-- ✅ Filtros por prefixo (system_*, service_*)
-- ✅ Filtro rabbit (RabbitMQ)
-- ✅ Contador inteligente de resultados
-
-</td>
-<td width="50%">
-
-### 📝 Editor de Consultas
-- ✅ Editor de texto InfluxQL
-- ✅ Construtor visual de consultas
-- ✅ Execução de consultas personalizadas
-- ✅ Validação de sintaxe
-
-### 🏷️ Filtros por Tag
-- ✅ Múltiplos filtros por tags
-- ✅ Seleção dinâmica de valores
-- ✅ Remoção fácil de filtros
-- ✅ Carregamento automático de tags
-
-### ⏰ Filtros Temporais
-- ✅ Últimos 5min / 15min / 1h / 6h / 24h / 7 dias
-- ✅ Período personalizado
-- ✅ Integração com construtor de queries
-
-### 📊 Visualização de Resultados
-- ✅ Tabela responsiva
-- ✅ Modo tela cheia (ESC para sair)
-- ✅ Abrir em nova janela
-- ✅ Exportação para CSV
-- ✅ Impressão de resultados
-
-</td>
-</tr>
-</table>
+- [Funcionalidades](#funcionalidades)
+- [Pré-requisitos](#pré-requisitos)
+- [Instalação](#instalação)
+- [Como Usar](#como-usar)
+- [Estrutura do Projeto](#estrutura-do-projeto)
+- [Exemplos de Consultas](#exemplos-de-consultas)
+- [Troubleshooting](#troubleshooting)
+- [Contribuindo](#contribuindo)
+- [Licença](#licença)
 
 ---
 
-## 💻 Pré-requisitos
+## Funcionalidades
 
-| Requisito | Versão Mínima | Recomendada |
-|-----------|---------------|-------------|
-| Node.js | 18.19.x | 20.x LTS |
-| npm | 9.x | 10.x |
-| InfluxDB | 1.8.x | 1.8.10 |
+### Configuração e Conexão
+- [x] Configuração de URL do servidor InfluxDB
+- [x] Autenticação com usuário e senha
+- [x] Teste de conexão em tempo real
+- [x] Persistência de configurações no navegador
+- [x] Indicador visual de status de conexão
+
+### Gerenciamento de Databases
+- [x] Listagem de todos os databases disponíveis
+- [x] Visualização de measurements por database
+- [x] Seleção rápida via interface gráfica
+
+### Sistema de Filtros
+- [x] Busca por texto em measurements
+- [x] Filtros por prefixo (`system_*`, `service_*`)
+- [x] Filtro para measurements do RabbitMQ
+- [x] Contador de resultados filtrados
+
+### Editor de Consultas
+- [x] Editor de texto InfluxQL
+- [x] Construtor visual de consultas
+- [x] Filtros por tags dinâmicos
+- [x] Filtros temporais (5min, 15min, 1h, 6h, 24h, 7 dias)
+- [x] Período personalizado
+
+### Visualização de Resultados
+- [x] Tabela responsiva com scroll
+- [x] Modo tela cheia (ESC para sair)
+- [x] Abrir em nova janela
+- [x] Exportação para CSV
+- [x] Impressão de resultados
 
 ---
 
-## 🚀 Instalação
+## Pré-requisitos
 
-### Instalação Rápida
+| Requisito | Versão Mínima |
+|-----------|---------------|
+| Node.js   | 18.19.x       |
+| npm       | 9.x           |
+| InfluxDB  | 1.8.x         |
+
+> [!IMPORTANT]
+> Certifique-se de ter o Node.js 18.19 ou superior instalado antes de continuar.
+
+---
+
+## Instalação
+
+### 1. Clone o repositório
 
 ```bash
-# Clone o repositório
 git clone https://github.com/seu-usuario/idle-influx-db.git
 cd idle-influx-db
+```
 
-# Instale as dependências
+### 2. Instale as dependências
+
+```bash
 npm install
+```
 
-# Inicie o servidor de desenvolvimento
+### 3. Inicie o servidor de desenvolvimento
+
+```bash
 npm start
 ```
 
-🌐 Acesse em **http://localhost:4200**
+A aplicação estará disponível em `http://localhost:4200`
 
 ---
 
-### 📦 Instalação Detalhada
+### Atualizando o Node.js
 
-<details>
-<summary><b>1️⃣ Atualizar Node.js (se necessário)</b></summary>
-
-<br>
+Se você estiver usando uma versão antiga do Node.js:
 
 **Windows:**
-```powershell
-# Baixe o instalador LTS em https://nodejs.org/
-# Execute e siga o assistente de instalação
-node --version  # Verifique a versão instalada
-```
+1. Baixe o instalador em https://nodejs.org/
+2. Execute e siga as instruções
+3. Verifique a versão: `node --version`
 
-**Linux:**
+**Linux (usando nvm):**
+
 ```bash
-# Usando nvm (recomendado)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 source ~/.bashrc
 nvm install 20
 nvm use 20
-
-# Ou usando NodeSource
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
 ```
 
 **macOS:**
-```bash
-# Usando Homebrew
-brew install node@20
 
-# Ou usando nvm
-brew install nvm
-nvm install 20
-nvm use 20
+```bash
+brew install node@20
 ```
 
-</details>
+---
 
-<details>
-<summary><b>2️⃣ Configurar InfluxDB com CORS</b></summary>
+### Configurando CORS no InfluxDB
 
-<br>
-
-Edite `/etc/influxdb/influxdb.conf` (Linux) ou `influxdb.conf` (Windows):
+Edite o arquivo `influxdb.conf`:
 
 ```ini
 [http]
   enabled = true
   bind-address = ":8086"
-  auth-enabled = false
-
-  # Habilitar CORS
   cors-enabled = true
   cors-allowed-origins = ["*"]
 ```
 
-Reinicie o InfluxDB:
-```bash
-# Linux
-sudo systemctl restart influxdb
-
-# Windows
-# Reinicie o serviço no Gerenciador de Serviços
-
-# Docker
-docker restart influxdb-container
-```
-
-Teste a conexão:
-```bash
-curl http://localhost:8086/ping
-# Deve retornar HTTP 204
-```
-
-</details>
-
-<details>
-<summary><b>3️⃣ Build para Produção</b></summary>
-
-<br>
-
-```bash
-# Build otimizado
-npm run build
-
-# Os arquivos estarão em dist/idle-influx-db/
-
-# Servir com http-server
-npm install -g http-server
-http-server dist/idle-influx-db -p 8080
-```
-
-</details>
+Reinicie o InfluxDB após a alteração.
 
 ---
 
-## 🎯 Como Usar
+## Como Usar
 
-### 1️⃣ Configurar Conexão
+### 1. Configurar Conexão
 
-<table>
-<tr>
-<td width="50%">
-
-1. Clique em **⚙️ Configuração**
+1. Clique em **Configuração** na barra lateral
 2. Preencha os dados:
-   - URL: `http://localhost:8086`
-   - Usuário: `admin`
-   - Senha: `sua-senha`
-3. Clique em **🔌 Testar Conexão**
-4. Status deve ficar ✅ Verde
-5. Clique em **💾 Salvar**
+   - **URL:** `http://localhost:8086`
+   - **Usuário:** `admin` (se necessário)
+   - **Senha:** sua senha
+3. Clique em **Testar Conexão**
+4. Se bem-sucedido, clique em **Salvar**
 
-</td>
-<td width="50%">
+### 2. Selecionar Database e Measurement
 
-```json
-{
-  "url": "http://localhost:8086",
-  "username": "admin",
-  "password": "admin123"
-}
-```
+1. Acesse **Editor de Consultas**
+2. Selecione um **Database** na lista
+3. Selecione um **Measurement** (use a busca para filtrar)
 
-</td>
-</tr>
-</table>
+### 3. Executar Consultas
 
----
+**Usando o construtor visual:**
+- Selecione um intervalo de tempo
+- Adicione filtros por tags (opcional)
+- Defina o limite de resultados
+- Clique em **Executar**
 
-### 2️⃣ Selecionar Database e Measurement
-
-```
-📊 Editor de Consultas
-├── 🗄️ Database Selector
-│   └── Selecione: mydb
-│
-└── 📋 Measurement List
-    ├── 🔍 Busca: cpu_usage
-    ├── 🎯 Filtros: [system_*] [service_*] [rabbit*]
-    └── ✅ Measurement selecionado
-```
-
----
-
-### 3️⃣ Construir e Executar Consultas
-
-**Opção A: Construtor Visual**
-
-| Campo | Exemplo |
-|-------|---------|
-| ⏰ Tempo | Últimas 24 horas |
-| 🏷️ Tags | host = 'server01' |
-| 📊 Limite | 1000 registros |
-
-**Opção B: InfluxQL Manual**
+**Escrevendo InfluxQL:**
 
 ```sql
-SELECT * FROM cpu_usage
-WHERE time > now() - 1h
-  AND host='server01'
-LIMIT 100;
+SELECT * FROM "cpu_usage" WHERE time > now() - 1h LIMIT 100
+```
+
+### 4. Visualizar Resultados
+
+- Clique no ícone de **tela cheia** para expandir
+- Pressione **ESC** para sair do modo tela cheia
+- Clique em **abrir em nova janela** para exportar/imprimir
+
+---
+
+## Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── sidebar/              # Menu lateral
+│   │   ├── configuration/        # Tela de configuração
+│   │   ├── database-list/        # Seletor de databases
+│   │   └── query-editor/         # Editor de consultas
+│   ├── services/
+│   │   ├── config.service.ts     # Gerenciamento de configurações
+│   │   └── influxdb.service.ts   # Cliente HTTP InfluxDB
+│   ├── models/
+│   │   └── influx.models.ts      # Interfaces TypeScript
+│   └── app.routes.ts             # Rotas da aplicação
+├── assets/                       # Recursos estáticos
+├── environments/                 # Configurações de ambiente
+└── styles.scss                   # Estilos globais
 ```
 
 ---
 
-### 4️⃣ Visualizar e Exportar
+## Exemplos de Consultas
 
-| Ação | Atalho | Descrição |
-|------|--------|-----------|
-| 🖥️ Tela Cheia | Clique no ícone | ESC para sair |
-| 📄 Nova Janela | Clique no ícone | Abre janela separada |
-| 📥 Exportar CSV | Na nova janela | Download instantâneo |
-| 🖨️ Imprimir | Na nova janela | Ctrl+P |
-
----
-
-## 📸 Screenshots
-
-<div align="center">
-
-### 🏠 Editor de Consultas
-
-![Query Editor](https://via.placeholder.com/800x450/1e293b/22ADF6?text=Query+Editor+with+Builder)
-
-### 📊 Visualização de Resultados
-
-![Results Table](https://via.placeholder.com/800x450/1e293b/10b981?text=Results+Table+View)
-
-### ⚙️ Painel de Configuração
-
-![Configuration](https://via.placeholder.com/800x450/1e293b/f59e0b?text=Configuration+Panel)
-
-</div>
-
----
-
-## 📚 Documentação
-
-### Estrutura do Projeto
-
-```
-idle-influx-db/
-├── src/
-│   ├── app/
-│   │   ├── components/
-│   │   │   ├── configuration/      # Tela de configuração
-│   │   │   ├── database-list/      # Seletor de databases
-│   │   │   ├── query-editor/       # Editor InfluxQL
-│   │   │   └── sidebar/            # Menu lateral
-│   │   ├── services/
-│   │   │   ├── config.service.ts   # Gerenciamento de config
-│   │   │   └── influxdb.service.ts # Cliente HTTP InfluxDB
-│   │   ├── models/
-│   │   │   └── influx.models.ts    # Interfaces TypeScript
-│   │   ├── app.component.ts        # Componente raiz
-│   │   ├── app.config.ts           # Configuração Angular
-│   │   └── app.routes.ts           # Definição de rotas
-│   ├── assets/                     # Recursos estáticos
-│   ├── environments/               # Configurações ambiente
-│   └── styles.scss                 # Estilos globais
-├── angular.json                    # Configuração Angular CLI
-├── package.json                    # Dependências
-├── tsconfig.json                   # Configuração TypeScript
-└── README.md                       # Este arquivo
-```
-
----
-
-### 🔌 InfluxDB Service API
-
-```typescript
-// Exemplos de uso do serviço
-
-// Listar databases
-influxService.getDatabases().subscribe(dbs => {
-  console.log(dbs); // ['mydb', 'telegraf', '_internal']
-});
-
-// Listar measurements
-influxService.getMeasurements('mydb').subscribe(measurements => {
-  console.log(measurements); // ['cpu_usage', 'memory', 'disk']
-});
-
-// Executar consulta
-const query = 'SELECT * FROM cpu_usage LIMIT 10';
-influxService.executeQuery('mydb', query).subscribe(result => {
-  console.log(result.series[0].values);
-});
-```
-
----
-
-### 📖 Guia InfluxQL
-
-<details>
-<summary><b>Consultas Básicas</b></summary>
+### Consulta básica
 
 ```sql
--- Selecionar tudo
-SELECT * FROM measurement_name LIMIT 100;
-
--- Com filtro de tempo
-SELECT * FROM cpu_usage
-WHERE time > now() - 1h;
-
--- Com filtro por tag
-SELECT * FROM temperature
-WHERE location='room1' AND time > now() - 24h;
+SELECT * FROM "cpu_usage" LIMIT 100
 ```
 
-</details>
-
-<details>
-<summary><b>Agregações</b></summary>
+### Com filtro de tempo
 
 ```sql
--- Média por intervalo
-SELECT MEAN(value) FROM temperature
-WHERE time > now() - 7d
-GROUP BY time(1h);
+SELECT * FROM "cpu_usage" WHERE time > now() - 1h
+```
 
--- Múltiplas funções
-SELECT MIN(value), MAX(value), MEAN(value)
-FROM cpu_usage
+### Com filtro por tag
+
+```sql
+SELECT * FROM "cpu_usage" WHERE "host" = 'server1' AND time > now() - 1h
+```
+
+### Agregação
+
+```sql
+SELECT MEAN("value") FROM "temperature" WHERE time > now() - 24h GROUP BY time(1h)
+```
+
+### Múltiplas agregações
+
+```sql
+SELECT MIN("value"), MAX("value"), MEAN("value")
+FROM "cpu_usage"
 WHERE time > now() - 6h
-GROUP BY time(10m);
+GROUP BY time(10m)
 ```
-
-</details>
-
-<details>
-<summary><b>Filtros Avançados</b></summary>
-
-```sql
--- OR condicional
-SELECT * FROM logs
-WHERE severity='error' OR severity='critical';
-
--- Regex matching
-SELECT * FROM logs
-WHERE message =~ /^Error:.*/;
-
--- IN clause
-SELECT * FROM metrics
-WHERE host IN ('server1', 'server2', 'server3');
-```
-
-</details>
-
-📘 [Documentação Completa do InfluxQL](https://docs.influxdata.com/influxdb/v1.8/query_language/)
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
-<details>
-<summary><b>❌ Erro: Cannot connect to InfluxDB</b></summary>
+### Erro de conexão
 
-**Soluções:**
-```bash
-# 1. Verifique se está rodando
-curl http://localhost:8086/ping
+> [!TIP]
+> Verifique se o InfluxDB está rodando executando:
+> ```bash
+> curl http://localhost:8086/ping
+> ```
 
-# 2. Verifique se CORS está habilitado
-# Edite influxdb.conf e adicione:
-# [http]
-#   cors-enabled = true
-#   cors-allowed-origins = ["*"]
+**Possíveis causas:**
+- InfluxDB não está rodando
+- URL ou porta incorreta
+- CORS não configurado
 
-# 3. Reinicie o InfluxDB
-sudo systemctl restart influxdb
+---
 
-# 4. Limpe cache do navegador
-# Ctrl+Shift+Delete
-```
-
-</details>
-
-<details>
-<summary><b>❌ Erro: 401 Unauthorized</b></summary>
+### Erro 401 Unauthorized
 
 **Causa:** Credenciais incorretas
 
 **Solução:**
+1. Verifique usuário e senha
+2. Teste via curl:
+
 ```bash
-# Teste via curl
 curl -G 'http://localhost:8086/query' \
   --data-urlencode "q=SHOW DATABASES" \
-  -u username:password
-
-# Se falhar, verifique usuário e senha
-# na página de Configuração
+  -u usuario:senha
 ```
 
-</details>
+---
 
-<details>
-<summary><b>❌ Erro: Port 4200 already in use</b></summary>
+### Porta 4200 em uso
 
-```bash
-# Windows
+**Windows:**
+
+```powershell
 netstat -ano | findstr :4200
 taskkill /PID <PID> /F
+```
 
-# Linux/Mac
+**Linux/Mac:**
+
+```bash
 lsof -ti:4200 | xargs kill -9
+```
 
-# Ou use porta diferente
+Ou use outra porta:
+
+```bash
 ng serve --port 4300
 ```
 
-</details>
+---
 
-<details>
-<summary><b>⚠️ Queries muito lentas</b></summary>
+### Queries lentas
 
-**Otimizações:**
-- ✅ Adicione `LIMIT 1000`
-- ✅ Reduza o intervalo de tempo
-- ✅ Use agregações com `GROUP BY`
-- ✅ Crie índices no InfluxDB
-- ✅ Verifique retention policies
-
-</details>
+> [!NOTE]
+> Para melhorar a performance:
+> - Adicione `LIMIT` nas consultas
+> - Reduza o intervalo de tempo
+> - Use agregações com `GROUP BY`
 
 ---
 
-## 🔒 Segurança
+## Contribuindo
 
-### ⚠️ Práticas Recomendadas
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature:
 
-<table>
-<tr>
-<th>✅ Faça</th>
-<th>❌ Não Faça</th>
-</tr>
-<tr>
-<td>
+```bash
+git checkout -b feature/minha-feature
+```
 
-- Use HTTPS em produção
-- Configure autenticação no InfluxDB
-- Restrinja CORS a domínios específicos
-- Implemente rate limiting
-- Valide inputs do usuário
+3. Commit suas mudanças:
 
-</td>
-<td>
+```bash
+git commit -m "feat: adiciona nova funcionalidade"
+```
 
-- Exponha credenciais no código
-- Use `auth-enabled = false` em prod
-- Use `cors-allowed-origins = ["*"]`
-- Permita queries sem limite
-- Hardcode URLs e senhas
+4. Push para a branch:
 
-</td>
-</tr>
-</table>
+```bash
+git push origin feature/minha-feature
+```
+
+5. Abra um Pull Request
 
 ---
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! 🎉
-
-### Como contribuir:
-
-1. **Fork** o projeto
-2. **Crie** uma branch (`git checkout -b feature/MinhaFeature`)
-3. **Commit** suas mudanças (`git commit -m 'feat: adiciona nova feature'`)
-4. **Push** para a branch (`git push origin feature/MinhaFeature`)
-5. **Abra** um Pull Request
 
 ### Padrão de Commits
 
-Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
-
 - `feat:` Nova funcionalidade
 - `fix:` Correção de bug
-- `docs:` Apenas documentação
-- `style:` Formatação de código
+- `docs:` Documentação
+- `style:` Formatação
 - `refactor:` Refatoração
-- `test:` Adição de testes
+- `test:` Testes
 - `chore:` Manutenção
 
 ---
 
-## 📊 Stack Tecnológica
+## Stack Tecnológica
 
-<div align="center">
-
-| Tecnologia | Versão | Propósito |
-|------------|--------|-----------|
-| ![Angular](https://img.shields.io/badge/Angular-18.0-DD0031?logo=angular) | 18.0 | Framework frontend |
-| ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript) | 5.4 | Linguagem |
-| ![RxJS](https://img.shields.io/badge/RxJS-7.8-B7178C?logo=reactivex) | 7.8 | Programação reativa |
-| ![SCSS](https://img.shields.io/badge/SCSS-Latest-CC6699?logo=sass) | - | Pré-processador CSS |
-| ![InfluxDB](https://img.shields.io/badge/InfluxDB-1.8-22ADF6?logo=influxdb) | 1.8 | Database |
-
-</div>
+- **Angular 18** - Framework frontend
+- **TypeScript 5.4** - Linguagem
+- **RxJS 7.8** - Programação reativa
+- **SCSS** - Estilos
+- **InfluxDB 1.8** - Banco de dados de séries temporais
 
 ---
 
-## 📜 Licença
+## Licença
 
 Este projeto está sob a licença **MIT**.
 
@@ -602,91 +365,16 @@ Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software...
+copies of the Software.
 ```
 
-Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+---
+
+## Suporte
+
+- [Reportar Bug](https://github.com/seu-usuario/idle-influx-db/issues/new)
+- [Sugerir Feature](https://github.com/seu-usuario/idle-influx-db/issues/new)
 
 ---
 
-## 🙏 Agradecimentos
-
-- Time do [Angular](https://angular.io/) pelo framework incrível
-- [InfluxData](https://www.influxdata.com/) pelo InfluxDB
-- Comunidade open source pelos feedbacks e contribuições
-
----
-
-## 📞 Suporte
-
-Precisa de ajuda?
-
-- 🐛 [Reportar um Bug](https://github.com/seu-usuario/idle-influx-db/issues/new?template=bug_report.md)
-- 💡 [Sugerir Feature](https://github.com/seu-usuario/idle-influx-db/issues/new?template=feature_request.md)
-- 💬 [Discussões](https://github.com/seu-usuario/idle-influx-db/discussions)
-- ⭐ Dê uma estrela se este projeto foi útil!
-
----
-
-<div align="center">
-
-### 🚀 Desenvolvido com ❤️ por [Patrick Alves](https://github.com/seu-usuario)
-
-**[⬆ Voltar ao topo](#-influxdb-ide)**
-
-[![Made with Angular](https://img.shields.io/badge/Made%20with-Angular-DD0031?style=for-the-badge&logo=angular)](https://angular.io/)
-[![Powered by InfluxDB](https://img.shields.io/badge/Powered%20by-InfluxDB-22ADF6?style=for-the-badge&logo=influxdb)](https://www.influxdata.com/)
-
-</div>
-
-
-## 🎨 Tecnologias Utilizadas
-
-- **Angular 18**: Framework principal
-- **TypeScript**: Linguagem de programação
-- **SCSS**: Estilização
-- **RxJS**: Programação reativa
-- **HttpClient**: Comunicação HTTP com InfluxDB
-
-## 🔒 Segurança
-
-- As credenciais são armazenadas apenas no `localStorage` do navegador
-- Nunca são enviadas para servidores externos
-- Use HTTPS em produção
-- Configure autenticação no InfluxDB para ambientes de produção
-
-## 📚 InfluxDB 1.8 API Reference
-
-A aplicação utiliza a API HTTP do InfluxDB 1.8:
-
-- **Ping**: `GET /ping` - Testa conexão
-- **Query**: `GET /query?db=<database>&q=<query>` - Executa consultas
-- **Databases**: `SHOW DATABASES` - Lista databases
-- **Measurements**: `SHOW MEASUREMENTS` - Lista measurements
-- **Tag Keys**: `SHOW TAG KEYS` - Lista chaves de tags
-- **Tag Values**: `SHOW TAG VALUES WITH KEY = "tagkey"` - Lista valores de tags
-
-## 🐛 Troubleshooting
-
-### Erro de CORS
-Se você receber erros de CORS, configure o InfluxDB para aceitar requisições do navegador ou use um proxy.
-
-### Erro de Conexão
-- Verifique se o InfluxDB está rodando
-- Confirme a URL e a porta (padrão: 8086)
-- Teste a conexão usando curl: `curl http://localhost:8086/ping`
-
-### Erro de Autenticação
-- Verifique usuário e senha
-- Confirme se a autenticação está habilitada no InfluxDB
-
-## 📄 Licença
-
-Este projeto é de código aberto para uso educacional e comercial.
-
-## 🤝 Contribuindo
-
-Sinta-se à vontade para abrir issues e pull requests para melhorias!
-#   i n f l u x - d b - i d e 
- 
- 
+Desenvolvido por **Patrick Alves**
