@@ -22,7 +22,7 @@ export class DatabaseListComponent implements OnInit {
   isLoadingDatabases = false;
   isLoadingMeasurements = false;
   error: string | null = null;
-  
+
   // Filtros
   measurementSearchText = '';
   hideSystemMeasurements = true;
@@ -97,7 +97,7 @@ export class DatabaseListComponent implements OnInit {
     // Aplicar filtro de busca por texto
     if (this.measurementSearchText.trim()) {
       const searchLower = this.measurementSearchText.toLowerCase();
-      filtered = filtered.filter(m => 
+      filtered = filtered.filter(m =>
         m.name.toLowerCase().includes(searchLower)
       );
     }
@@ -108,7 +108,7 @@ export class DatabaseListComponent implements OnInit {
       if (this.prefixFilters.rabbit) {
         return m.name.startsWith('rabbit') || m.name.startsWith('rabbitmq');
       }
-      
+
       // Caso contrário, ocultar system_ e service_ se estiverem ativos
       if (this.prefixFilters.system && m.name.startsWith('system_')) {
         return false;
@@ -116,7 +116,7 @@ export class DatabaseListComponent implements OnInit {
       if (this.prefixFilters.service && m.name.startsWith('service_')) {
         return false;
       }
-      
+
       return true;
     });
 

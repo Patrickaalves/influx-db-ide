@@ -122,7 +122,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  
+
   .search-input {
     flex: 1;
     padding: 10px 35px 10px 12px;
@@ -200,7 +200,7 @@
     color: var(--secondary-color);
     font-weight: 600;
   }
-  
+
   // Estilo especial para o filtro "mostrar rabbit"
   &.filter-show.active {
     background-color: #fff3e0;
@@ -257,7 +257,7 @@
   &.selected {
     background-color: #e3f2fd;
     border-color: var(--primary-color);
-    
+
     .db-name {
       color: var(--secondary-color);
       font-weight: 600;
@@ -299,7 +299,7 @@
     border-color: var(--secondary-color);
     color: white;
     font-weight: 600;
-    
+
     .measurement-name {
       color: white;
     }

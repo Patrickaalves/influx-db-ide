@@ -376,7 +376,7 @@
         border-radius: 8px;
         overflow: hidden;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        
+
         thead th {
           background-color: #fff;
           position: sticky;
@@ -400,7 +400,7 @@
 
         tbody tr {
           transition: background-color 0.2s;
-          
+
           &:nth-child(even) {
             background-color: #f8f9fa;
           }

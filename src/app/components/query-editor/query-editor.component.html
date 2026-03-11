@@ -176,16 +176,16 @@
             </span>
           </div>
           <div class="header-actions" *ngIf="hasResults()">
-            <button 
-              class="btn-action btn-fullscreen" 
+            <button
+              class="btn-action btn-fullscreen"
               (click)="toggleFullscreen()"
               [title]="isResultsFullscreen ? 'Sair da tela cheia (ESC)' : 'Expandir tela cheia'"
             >
               <span *ngIf="!isResultsFullscreen">⛶</span>
               <span *ngIf="isResultsFullscreen">✕</span>
             </button>
-            <button 
-              class="btn-action" 
+            <button
+              class="btn-action"
               (click)="openInNewWindow()"
               title="Abrir em nova janela"
               *ngIf="!isResultsFullscreen"
