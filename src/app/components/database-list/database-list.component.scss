@@ -6,6 +6,7 @@
   gap: 15px;
   padding: 20px;
   overflow: hidden;
+  max-height: 350px;
 }
 
 // Databases Section (Left Side)
@@ -166,13 +167,20 @@
   }
 }
 
-.filter-buttons {
+// Custom Filters
+.custom-filters {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
-.filter-btn {
+.filters-header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-add-filter {
   padding: 6px 12px;
   border: 2px solid #ddd;
   background: white;
@@ -185,27 +193,123 @@
   transition: all 0.2s;
   color: #666;
 
-  .filter-icon {
-    font-size: 1rem;
+  &:hover {
+    border-color: var(--primary-color);
+    background-color: #e3f2fd;
+    color: var(--secondary-color);
   }
+}
+
+.btn-clear-filters {
+  padding: 6px 12px;
+  border: 2px solid #ffcdd2;
+  background: #ffebee;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+  color: #c62828;
 
   &:hover {
-    border-color: #999;
-    background-color: #f9f9f9;
+    border-color: #ef9a9a;
+    background-color: #ffcdd2;
   }
+}
 
-  &.active {
-    background-color: #e3f2fd;
+.filter-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.filter-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
     border-color: var(--primary-color);
-    color: var(--secondary-color);
-    font-weight: 600;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
   }
 
-  // Estilo especial para o filtro "mostrar rabbit"
-  &.filter-show.active {
-    background-color: #fff3e0;
-    border-color: #ff9800;
-    color: #e65100;
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.btn-confirm-filter {
+  padding: 8px 14px;
+  border: 2px solid #4caf50;
+  background: #e8f5e9;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #2e7d32;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #c8e6c9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.active-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.filter-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: #c62828;
+  font-weight: 500;
+}
+
+.btn-remove-filter {
+  background: none;
+  border: none;
+  color: #c62828;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 0 2px;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
   }
 }
 
@@ -214,7 +318,7 @@
 .measurements-list {
   overflow-y: auto;
   flex: 1;
-  max-height: 400px;
+  max-height: 300px;
 }
 
 .databases-list {

@@ -25,19 +25,30 @@ export class DatabaseListComponent implements OnInit {
 
   // Filtros
   measurementSearchText = '';
-  hideSystemMeasurements = true;
-  hideServiceMeasurements = true;
-  showOnlyRabbitMeasurements = false; // Mudado para mostrar apenas rabbit quando ativo
-  prefixFilters = {
-    system: true,
-    service: true,
-    rabbit: false // rabbit começa desativado
-  };
+  customFilters: string[] = [];
+  newFilterText = '';
+  showFilterInput = false;
 
   constructor(private influxService: InfluxdbService) {}
 
   ngOnInit(): void {
     this.loadDatabases();
+    this.loadFiltersFromStorage();
+  }
+
+  loadFiltersFromStorage(): void {
+    const saved = localStorage.getItem('influxdb_custom_filters');
+    if (saved) {
+      try {
+        this.customFilters = JSON.parse(saved);
+      } catch {
+        this.customFilters = [];
+      }
+    }
+  }
+
+  saveFiltersToStorage(): void {
+    localStorage.setItem('influxdb_custom_filters', JSON.stringify(this.customFilters));
   }
 
   loadDatabases(): void {
@@ -102,23 +113,20 @@ export class DatabaseListComponent implements OnInit {
       );
     }
 
-    // Aplicar filtros de prefixo
-    filtered = filtered.filter(m => {
-      // Se o filtro rabbit está ativo, mostrar APENAS measurements rabbit
-      if (this.prefixFilters.rabbit) {
-        return m.name.startsWith('rabbit') || m.name.startsWith('rabbitmq');
-      }
-
-      // Caso contrário, ocultar system_ e service_ se estiverem ativos
-      if (this.prefixFilters.system && m.name.startsWith('system_')) {
-        return false;
-      }
-      if (this.prefixFilters.service && m.name.startsWith('service_')) {
-        return false;
-      }
-
-      return true;
-    });
+    // Aplicar filtros customizados (ocultar measurements que começam com o padrão)
+    if (this.customFilters.length > 0) {
+      filtered = filtered.filter(m => {
+        const nameLower = m.name.toLowerCase();
+        return !this.customFilters.some(filter => {
+          const filterLower = filter.toLowerCase();
+          // Suporta * no final como wildcard
+          if (filterLower.endsWith('*')) {
+            return nameLower.startsWith(filterLower.slice(0, -1));
+          }
+          return nameLower === filterLower || nameLower.startsWith(filterLower);
+        });
+      });
+    }
 
     return filtered;
   }
@@ -127,7 +135,29 @@ export class DatabaseListComponent implements OnInit {
     this.measurementSearchText = '';
   }
 
-  toggleFilter(filter: 'system' | 'service' | 'rabbit'): void {
-    this.prefixFilters[filter] = !this.prefixFilters[filter];
+  toggleFilterInput(): void {
+    this.showFilterInput = !this.showFilterInput;
+    if (!this.showFilterInput) {
+      this.newFilterText = '';
+    }
+  }
+
+  addFilter(): void {
+    const filter = this.newFilterText.trim();
+    if (filter && !this.customFilters.includes(filter)) {
+      this.customFilters.push(filter);
+      this.saveFiltersToStorage();
+      this.newFilterText = '';
+    }
+  }
+
+  removeFilter(filter: string): void {
+    this.customFilters = this.customFilters.filter(f => f !== filter);
+    this.saveFiltersToStorage();
+  }
+
+  clearAllFilters(): void {
+    this.customFilters = [];
+    this.saveFiltersToStorage();
   }
 }

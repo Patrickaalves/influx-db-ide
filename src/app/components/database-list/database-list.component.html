@@ -63,34 +63,65 @@
         </button>
       </div>
 
-      <div class="filter-buttons">
-        <button
-          class="filter-btn"
-          [class.active]="prefixFilters.system"
-          (click)="toggleFilter('system')"
-          title="Ocultar measurements system_*"
-        >
-          <span class="filter-icon">{{ prefixFilters.system ? '�' : '👁️' }}</span>
-          Ocultar system_*
-        </button>
-        <button
-          class="filter-btn"
-          [class.active]="prefixFilters.service"
-          (click)="toggleFilter('service')"
-          title="Ocultar measurements service_*"
-        >
-          <span class="filter-icon">{{ prefixFilters.service ? '🚫' : '👁️' }}</span>
-          Ocultar service_*
-        </button>
-        <button
-          class="filter-btn filter-show"
-          [class.active]="prefixFilters.rabbit"
-          (click)="toggleFilter('rabbit')"
-          title="Mostrar apenas measurements rabbit*"
-        >
-          <span class="filter-icon">{{ prefixFilters.rabbit ? '🐰' : '📋' }}</span>
-          {{ prefixFilters.rabbit ? 'Mostrando' : 'Mostrar' }} rabbit*
-        </button>
+      <!-- Custom Filters Section -->
+      <div class="custom-filters">
+        <div class="filters-header">
+          <button
+            class="btn-add-filter"
+            (click)="toggleFilterInput()"
+            title="Ocultar measurements por prefixo"
+          >
+            <span>{{ showFilterInput ? '✕' : '🚫' }}</span>
+            {{ showFilterInput ? 'Cancelar' : 'Ocultar prefixo' }}
+          </button>
+          <button
+            *ngIf="customFilters.length > 0"
+            class="btn-clear-filters"
+            (click)="clearAllFilters()"
+            title="Limpar todos os filtros"
+          >
+            🗑️ Limpar todos
+          </button>
+        </div>
+
+        <!-- Input para novo filtro -->
+        <div class="filter-input-row" *ngIf="showFilterInput">
+          <input
+            type="text"
+            [(ngModel)]="newFilterText"
+            placeholder="Ex: system_* ou jvm_"
+            class="filter-input"
+            (keyup.enter)="addFilter()"
+          />
+          <button
+            class="btn-confirm-filter"
+            (click)="addFilter()"
+            [disabled]="!newFilterText.trim()"
+            title="Adicionar filtro"
+          >
+            ✓
+          </button>
+        </div>
+
+        <!-- Lista de filtros ativos -->
+        <div class="active-filters" *ngIf="customFilters.length > 0">
+          <span class="filter-label">Ocultando:</span>
+          <div class="filter-tags">
+            <span
+              *ngFor="let filter of customFilters"
+              class="filter-tag"
+            >
+              {{ filter }}
+              <button
+                class="btn-remove-filter"
+                (click)="removeFilter(filter)"
+                title="Remover filtro"
+              >
+                ✕
+              </button>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 
