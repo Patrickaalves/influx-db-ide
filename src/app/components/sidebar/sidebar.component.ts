@@ -21,6 +21,7 @@ export class SidebarComponent implements OnDestroy {
   isMonitoring = false;
   isFullscreen = false;
   expandedCards: Set<string> = new Set();
+  isCollapsed = false;
 
   private subscriptions: Subscription[] = [];
 
@@ -62,6 +63,10 @@ export class SidebarComponent implements OnDestroy {
 
   toggleMonitor(): void {
     this.showMonitor = !this.showMonitor;
+  }
+
+  toggleSidebar(): void {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   startMonitoring(): void {

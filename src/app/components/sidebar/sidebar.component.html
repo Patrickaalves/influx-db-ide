@@ -1,4 +1,8 @@
-<aside class="sidebar">
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <button class="toggle-sidebar-btn" (click)="toggleSidebar()" [title]="isCollapsed ? 'Expandir menu' : 'Recolher menu'">
+    <span class="toggle-icon">{{ isCollapsed ? '▶' : '◀' }}</span>
+  </button>
+
   <div class="sidebar-header">
     <h2>InfluxDB IDE</h2>
     <div class="connection-status" [class.connected]="isConnected">
