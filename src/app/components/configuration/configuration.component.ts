@@ -316,7 +316,6 @@ export class ConfigurationComponent implements OnInit {
 
         if (response.summary.total === 0) {
           this.containerSearchStatus = `Nenhum container InfluxDB encontrado no ${envLabel}`;
-          this.showDockerInstructions = true;
         } else {
           const runningText = response.summary.running > 0 ? `${response.summary.running} ativo(s)` : '';
           const stoppedText = response.summary.stopped > 0 ? `${response.summary.stopped} parado(s)` : '';
