@@ -19,6 +19,116 @@
     </a>
   </nav>
 
+  <!-- Live Metrics Monitor Section -->
+  <div class="history-section">
+    <div class="history-header">
+      <div class="history-title" (click)="toggleMonitor()">
+        <span class="icon">{{ isMonitoring ? '📡' : '📴' }}</span>
+        <span class="label">Monitor de Métricas</span>
+        <span class="toggle-icon">{{ showMonitor ? '▼' : '▶' }}</span>
+      </div>
+      <div class="monitor-controls" *ngIf="showMonitor">
+        <button
+          class="btn-expand"
+          (click)="toggleFullscreen()"
+          title="Expandir visualização"
+        >
+          ⛶
+        </button>
+        <button
+          class="btn-monitor-toggle"
+          (click)="isMonitoring ? stopMonitoring() : startMonitoring()"
+          [class.active]="isMonitoring"
+          [title]="isMonitoring ? 'Pausar monitoramento' : 'Iniciar monitoramento'"
+        >
+          {{ isMonitoring ? '⏸️' : '▶️' }}
+        </button>
+        <button
+          class="btn-clear-history"
+          (click)="clearMetrics()"
+          *ngIf="liveMetrics.length > 0"
+          title="Limpar métricas"
+        >
+          🗑️
+        </button>
+      </div>
+    </div>
+
+    <div class="history-content" *ngIf="showMonitor">
+      <div class="monitor-status" *ngIf="isMonitoring">
+        <div class="status-indicator">
+          <span class="pulse-dot"></span>
+          <span class="status-text">Monitorando em tempo real</span>
+        </div>
+      </div>
+
+      <div class="history-empty" *ngIf="liveMetrics.length === 0 && !isMonitoring">
+        <p>Inicie o monitoramento para ver as métricas</p>
+      </div>
+
+      <div class="history-empty" *ngIf="liveMetrics.length === 0 && isMonitoring">
+        <p>Aguardando novas métricas...</p>
+      </div>
+
+      <div class="history-list" *ngIf="liveMetrics.length > 0">
+        <div
+          class="history-item metric-item"
+          *ngFor="let metric of liveMetrics"
+          [title]="formatDateTimeBrasilia(metric.timestamp)"
+        >
+          <div class="item-header">
+            <div class="item-meta">
+              <span class="measurement">{{ metric.measurement }}</span>
+              <span class="timestamp">{{ formatTimestamp(metric.timestamp) }}</span>
+            </div>
+            <span class="live-badge">🔴 LIVE</span>
+          </div>
+
+          <div class="item-database">
+            <span class="db-label">DB:</span>
+            <span class="db-value">{{ metric.database }}</span>
+          </div>
+
+          <div class="metric-time">
+            <span class="time-icon">🕐</span>
+            <span class="time-value">{{ formatDateTimeBrasilia(metric.timestamp) }}</span>
+          </div>
+
+          <!-- Tags -->
+          <div class="metric-tags" *ngIf="getTagKeys(metric).length > 0">
+            <div class="section-title">Tags:</div>
+            <div class="tags-list">
+              <span class="tag" *ngFor="let tagKey of getTagKeys(metric)">
+                <span class="tag-key">{{ tagKey }}:</span>
+                <span class="tag-value">{{ metric.tags[tagKey] }}</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Fields -->
+          <div class="metric-fields" *ngIf="getFieldKeys(metric).length > 0">
+            <div class="section-title">Campos:</div>
+            <div class="fields-table">
+              <table>
+                <tbody>
+                  <tr *ngFor="let fieldKey of getFieldKeys(metric).slice(0, 5)">
+                    <td class="field-key">{{ fieldKey }}</td>
+                    <td class="field-value" [title]="metric.fields[fieldKey]">
+                      {{ metric.fields[fieldKey] }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="preview-note" *ngIf="getFieldKeys(metric).length > 5">
+                + {{ getFieldKeys(metric).length - 5 }} campo(s) a mais
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="sidebar-footer" *ngIf="currentConfig">
     <div class="config-info">
       <div class="info-item">
@@ -32,3 +142,128 @@
     </div>
   </div>
 </aside>
+
+<!-- Fullscreen Metrics Monitor -->
+<div class="metrics-fullscreen" *ngIf="isFullscreen" (click)="toggleFullscreen()">
+  <div class="fullscreen-content" (click)="$event.stopPropagation()">
+    <div class="fullscreen-header">
+      <div class="header-left">
+        <h2>📡 Monitor de Métricas em Tempo Real</h2>
+        <span class="status-badge" *ngIf="isMonitoring">
+          <span class="pulse-dot"></span>
+          Monitorando
+        </span>
+      </div>
+      <div class="header-actions">
+        <button
+          class="btn-action btn-monitor"
+          (click)="isMonitoring ? stopMonitoring() : startMonitoring()"
+          [class.active]="isMonitoring"
+          [title]="isMonitoring ? 'Pausar monitoramento' : 'Iniciar monitoramento'"
+        >
+          {{ isMonitoring ? '⏸️' : '▶️' }}
+        </button>
+        <button class="btn-action" (click)="clearMetrics()" *ngIf="liveMetrics.length > 0" title="Limpar">
+          🗑️
+        </button>
+        <button class="btn-action btn-close" (click)="toggleFullscreen()" title="Fechar (ESC)">
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <div class="fullscreen-body">
+      <div class="empty-state" *ngIf="liveMetrics.length === 0">
+        <div class="empty-icon">📊</div>
+        <h3>{{ isMonitoring ? 'Aguardando métricas...' : 'Monitor pausado' }}</h3>
+        <p>{{ isMonitoring ? 'As métricas aparecerão aqui assim que chegarem' : 'Inicie o monitoramento para ver as métricas em tempo real' }}</p>
+      </div>
+
+      <div class="metrics-grid" *ngIf="liveMetrics.length > 0">
+        <div class="metric-card"
+             *ngFor="let metric of liveMetrics"
+             [class.expanded]="isCardExpanded(metric.id)">
+          <div class="card-header" (click)="toggleCardExpansion(metric.id)">
+            <div class="card-title">
+              <span class="measurement-icon">📊</span>
+              <h3>{{ metric.measurement }}</h3>
+            </div>
+            <div class="header-actions">
+              <span class="live-indicator">
+                <span class="live-dot"></span>
+                LIVE
+              </span>
+              <button class="btn-expand-card" [title]="isCardExpanded(metric.id) ? 'Recolher' : 'Expandir'">
+                {{ isCardExpanded(metric.id) ? '▼' : '▶' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="card-compact">
+            <div class="compact-info">
+              <span class="compact-label">DB:</span>
+              <span class="compact-value">{{ metric.database }}</span>
+              <span class="compact-separator">•</span>
+              <span class="compact-time">{{ formatTimestamp(metric.timestamp) }}</span>
+            </div>
+            <div class="compact-stats">
+              <span class="stat-badge" *ngIf="getTagKeys(metric).length > 0">
+                🏷️ {{ getTagKeys(metric).length }} tag(s)
+              </span>
+              <span class="stat-badge">
+                📝 {{ getFieldKeys(metric).length }} campo(s)
+              </span>
+            </div>
+          </div>
+
+          <div class="card-expanded" *ngIf="isCardExpanded(metric.id)">
+            <div class="card-info">
+              <div class="info-row">
+                <span class="info-label">Database:</span>
+                <span class="info-value">{{ metric.database }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Timestamp:</span>
+                <span class="info-value timestamp">{{ formatDateTimeBrasilia(metric.timestamp) }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Há:</span>
+                <span class="info-value">{{ formatTimestamp(metric.timestamp) }}</span>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="card-section" *ngIf="getTagKeys(metric).length > 0">
+              <div class="section-header">
+                <span class="section-icon">🏷️</span>
+                <span class="section-title">Tags</span>
+              </div>
+              <div class="tags-grid">
+                <div class="tag-item" *ngFor="let tagKey of getTagKeys(metric)">
+                  <span class="tag-key">{{ tagKey }}</span>
+                  <span class="tag-value">{{ metric.tags[tagKey] }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fields -->
+            <div class="card-section" *ngIf="getFieldKeys(metric).length > 0">
+              <div class="section-header">
+                <span class="section-icon">📝</span>
+                <span class="section-title">Campos ({{ getFieldKeys(metric).length }})</span>
+              </div>
+              <div class="fields-grid">
+                <div class="field-item" *ngFor="let fieldKey of getFieldKeys(metric)">
+                  <span class="field-key">{{ fieldKey }}</span>
+                  <span class="field-value" [title]="metric.fields[fieldKey]">
+                    {{ metric.fields[fieldKey] }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

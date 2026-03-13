@@ -226,16 +226,72 @@ export class QueryEditorComponent implements OnInit {
 
   getColumns(): string[] {
     if (this.hasResults() && this.queryResult!.results[0].series![0].columns) {
-      return this.queryResult!.results[0].series![0].columns;
+      const originalColumns = this.queryResult!.results[0].series![0].columns;
+
+      // Encontrar índice da coluna 'time'
+      const timeIndex = originalColumns.findIndex(col => col === 'time');
+
+      // Se houver coluna 'time', adicionar coluna formatada após ela
+      if (timeIndex !== -1) {
+        const columns = [...originalColumns];
+        columns.splice(timeIndex + 1, 0, 'Data/Hora Formatada (Visualizador)');
+        return columns;
+      }
+
+      return originalColumns;
     }
     return [];
   }
 
   getRows(): any[][] {
     if (this.hasResults() && this.queryResult!.results[0].series![0].values) {
-      return this.queryResult!.results[0].series![0].values;
+      const originalRows = this.queryResult!.results[0].series![0].values;
+      const originalColumns = this.queryResult!.results[0].series![0].columns;
+
+      // Encontrar índice da coluna 'time'
+      const timeIndex = originalColumns?.findIndex(col => col === 'time') ?? -1;
+
+      // Se houver coluna 'time', adicionar coluna formatada
+      if (timeIndex !== -1) {
+        return originalRows.map(row => {
+          const newRow = [...row];
+          const timeValue = row[timeIndex];
+          const formattedTime = this.formatDateTimeBrasilia(timeValue);
+          newRow.splice(timeIndex + 1, 0, formattedTime);
+          return newRow;
+        });
+      }
+
+      return originalRows;
     }
     return [];
+  }
+
+  private formatDateTimeBrasilia(timeValue: any): string {
+    if (!timeValue) return '-';
+
+    try {
+      // Criar objeto Date a partir do valor
+      const date = new Date(timeValue);
+
+      // Aplicar offset de Brasília (-3 horas = -180 minutos)
+      const brasiliaOffset = -180; // minutos
+      const utcTime = date.getTime() + (date.getTimezoneOffset() * 60000);
+      const brasiliaTime = new Date(utcTime + (brasiliaOffset * 60000));
+
+      // Formatar como dd/mm/yyyy hh:mm:ss
+      const day = String(brasiliaTime.getDate()).padStart(2, '0');
+      const month = String(brasiliaTime.getMonth() + 1).padStart(2, '0');
+      const year = brasiliaTime.getFullYear();
+      const hours = String(brasiliaTime.getHours()).padStart(2, '0');
+      const minutes = String(brasiliaTime.getMinutes()).padStart(2, '0');
+      const seconds = String(brasiliaTime.getSeconds()).padStart(2, '0');
+
+      return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return String(timeValue);
+    }
   }
 
   toggleFullscreen(): void {
