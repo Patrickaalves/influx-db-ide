@@ -58,7 +58,7 @@ app.get('/api/docker-containers/:environment', (req, res) => {
   // Comandos para buscar containers com imagem InfluxDB (qualquer versão)
   // Para WSL, usa aspas simples dentro de bash -c para evitar interpretação do bash
   let runningCmd, stoppedCmd;
-  
+
   if (environment === 'windows') {
     runningCmd = 'docker ps --format "{{.Names}}|{{.Ports}}|{{.Image}}"';
     stoppedCmd = 'docker ps -a --filter "status=exited" --format "{{.Names}}|{{.Ports}}|{{.Image}}"';
@@ -85,11 +85,11 @@ app.get('/api/docker-containers/:environment', (req, res) => {
   exec(commands.running, { shell: 'powershell.exe' }, (error, stdout, stderr) => {
     console.log(`[${environment}] Buscando containers ATIVOS com imagem influxdb...`);
     console.log(`[${environment}] Comando:`, commands.running);
-    
+
     if (error) {
       console.error(`[${environment}] Erro:`, error.message);
     }
-    
+
     if (!error && stdout && stdout.trim()) {
       console.log(`[${environment}] Resposta:`, stdout.trim());
       const containers = stdout.trim().split('\n')
@@ -123,11 +123,11 @@ app.get('/api/docker-containers/:environment', (req, res) => {
   exec(commands.stopped, { shell: 'powershell.exe' }, (error, stdout, stderr) => {
     console.log(`[${environment}] Buscando containers PARADOS com imagem influxdb...`);
     console.log(`[${environment}] Comando:`, commands.stopped);
-    
+
     if (error) {
       console.error(`[${environment}] Erro:`, error.message);
     }
-    
+
     if (!error && stdout && stdout.trim()) {
       console.log(`[${environment}] Resposta:`, stdout.trim());
       const containers = stdout.trim().split('\n')
