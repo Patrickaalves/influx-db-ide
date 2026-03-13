@@ -1,10 +1,10 @@
 # InfluxDB IDE
 
-Interface web moderna para consultar e gerenciar bancos de dados **InfluxDB 1.8**, desenvolvida com **Angular 18** e **TypeScript**.
+Interface web moderna para consultar e gerenciar bancos de dados **InfluxDB 1.11.8**, desenvolvida com **Angular 18** e **TypeScript**.
 
 ![Angular](https://img.shields.io/badge/Angular-18.0-DD0031?logo=angular&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-3178C6?logo=typescript&logoColor=white)
-![InfluxDB](https://img.shields.io/badge/InfluxDB-1.8-22ADF6?logo=influxdb&logoColor=white)
+![InfluxDB](https://img.shields.io/badge/InfluxDB-1.11.8-22ADF6?logo=influxdb&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
@@ -31,6 +31,11 @@ Interface web moderna para consultar e gerenciar bancos de dados **InfluxDB 1.8*
 - [x] Teste de conexão em tempo real
 - [x] Persistência de configurações no navegador
 - [x] Indicador visual de status de conexão
+- [x] 🆕 **Busca automática de IP do WSL** via API Node.js (PowerShell)
+- [x] 🆕 **Detecção inteligente de containers Docker** com escolha de ambiente
+- [x] 🆕 **Visualização de containers ativos e parados** (verde/vermelho)
+- [x] 🆕 **Iniciar containers parados** direto pela interface
+- [x] 🆕 **Comandos Docker reais** (não mais port scanning)
 
 ### Gerenciamento de Databases
 - [x] Listagem de todos os databases disponíveis
@@ -65,10 +70,15 @@ Interface web moderna para consultar e gerenciar bancos de dados **InfluxDB 1.8*
 |-----------|---------------|
 | Node.js   | 18.19.x       |
 | npm       | 9.x           |
-| InfluxDB  | 1.8.x         |
+| InfluxDB  | 1.11.8.x         |
+| **WSL** (opcional) | 2.x (para detecção automática) |
+| **Docker** (opcional) | - (para detecção de containers) |
 
 > [!IMPORTANT]
 > Certifique-se de ter o Node.js 18.19 ou superior instalado antes de continuar.
+
+> [!NOTE]
+> WSL e Docker são opcionais. Se não estiverem instalados, você pode configurar a URL manualmente.
 
 ---
 
@@ -82,13 +92,31 @@ cd idle-influx-db
 ```
 
 ### 2. Instale as dependências
+a aplicação
 
+#### Opção A: Com Servidor de API (Recomendado) 🚀
 ```bash
-npm install
+npm run dev
 ```
+Inicia **Servidor Node.js** (porta 3001) + **Angular** (porta 4200)
 
-### 3. Inicie o servidor de desenvolvimento
+**Benefícios:**
+- ✅ Busca **instantânea** de IP do WSL usando `wsl hostname -I`
+- ✅ Detecção **automática** de containers Docker
+- ✅ UI mais rápida e responsiva
 
+#### Opção B: Apenas Angular
+```bash
+npm start
+```
+**Nota:** Sem o servidor API, a busca de IPs será feita por scanning (mais lento).
+
+A aplicação estará disponível em `http://localhost:4200`
+
+> [!TIP]
+> Para mais detalhes sobre o servidor de API, consulte:
+> - [README-SERVER.md](README-SERVER.md) - Documentação completa da API
+> - [COMO-USAR.md](COMO-USAR.md) - Guia de uso e troubleshooting
 ```bash
 npm start
 ```
@@ -348,7 +376,7 @@ git push origin feature/minha-feature
 - **TypeScript 5.4** - Linguagem
 - **RxJS 7.8** - Programação reativa
 - **SCSS** - Estilos
-- **InfluxDB 1.8** - Banco de dados de séries temporais
+- **InfluxDB 1.11.8** - Banco de dados de séries temporais
 
 ---
 

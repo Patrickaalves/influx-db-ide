@@ -1,7 +1,7 @@
 <div class="configuration-container">
   <div class="config-header">
     <h1>Configurações do InfluxDB</h1>
-    <p>Configure a conexão com o seu servidor InfluxDB 1.8</p>
+    <p>Configure a conexão com o seu servidor InfluxDB 1.11.8</p>
   </div>
 
   <div class="config-form">
@@ -15,6 +15,172 @@
         class="form-control"
       />
       <small class="form-help">Exemplo: http://localhost:8086 ou http://192.168.1.100:8086</small>
+
+      <div class="wsl-ip-actions">
+        <button
+          type="button"
+          class="btn btn-small btn-outline"
+          (click)="searchWslIps()"
+          [disabled]="isSearchingIps"
+        >
+          {{ isSearchingIps ? 'Buscando...' : 'Buscar IPs do WSL' }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-small btn-outline"
+          (click)="searchAndUseWslIp()"
+          [disabled]="isSearchingIps"
+        >
+          {{ isSearchingIps ? 'Buscando...' : 'Buscar IP e Utilizar' }}
+        </button>
+      </div>
+
+      <div class="wsl-search-status" *ngIf="wslSearchStatus">
+        <small class="status-message">{{ wslSearchStatus }}</small>
+      </div>
+
+      <div class="wsl-ip-list" *ngIf="wslIps.length > 0">
+        <small class="form-help">IPs encontrados (clique para usar):</small>
+        <div class="ip-chips">
+          <button
+            type="button"
+            *ngFor="let ip of wslIps"
+            class="ip-chip"
+            (click)="useWslIp(ip)"
+          >
+            {{ ip }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Docker Containers Section -->
+    <div class="form-group docker-section">
+      <label>🐳 Containers Docker do InfluxDB</label>
+      <p class="form-help">Detecte automaticamente containers do InfluxDB rodando no Docker</p>
+
+      <!-- Seletor de Ambiente -->
+      <div class="docker-environment-selector">
+        <label class="radio-label">
+          <input
+            type="radio"
+            name="dockerEnv"
+            value="windows"
+            [(ngModel)]="selectedDockerEnvironment"
+          />
+          <span>🪟 Docker no Windows</span>
+        </label>
+        <label class="radio-label">
+          <input
+            type="radio"
+            name="dockerEnv"
+            value="wsl"
+            [(ngModel)]="selectedDockerEnvironment"
+          />
+          <span>🐧 Docker no WSL/Linux</span>
+        </label>
+      </div>
+
+      <div class="docker-actions">
+        <button
+          type="button"
+          class="btn btn-small btn-outline"
+          (click)="searchDockerContainers()"
+          [disabled]="isSearchingContainers"
+        >
+          {{ isSearchingContainers ? 'Buscando...' : '🔍 Buscar Containers' }}
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-small btn-outline-info"
+          (click)="toggleDockerInstructions()"
+        >
+          {{ showDockerInstructions ? '📖 Ocultar Instruções' : '📖 Ver Instruções' }}
+        </button>
+      </div>
+
+      <div class="docker-instructions" *ngIf="showDockerInstructions">
+        <h4>Como executar o InfluxDB 1.11.8 no Docker:</h4>
+
+        <div class="instruction-block">
+          <strong>🪟 Docker no Windows:</strong>
+          <code>docker run -d -p 8086:8086 --name influxdb influxdb:1.11.8</code>
+        </div>
+
+        <div class="instruction-block">
+          <strong>🐧 Docker no WSL2:</strong>
+          <code>docker run -d -p 8086:8086 --name influxdb influxdb:1.11.8</code>
+          <small>Nota: Use o IP do WSL2 para acessar (será detectado automaticamente)</small>
+        </div>
+
+        <div class="instruction-block">
+          <strong>📋 Verificar containers:</strong>
+          <code>docker ps</code> (ativos) ou <code>docker ps -a</code> (todos)
+        </div>
+
+        <div class="instruction-block">
+          <strong>▶️ Iniciar container parado:</strong>
+          <code>docker start influxdb</code>
+        </div>
+
+        <div class="instruction-block">
+          <strong>🛑 Parar container:</strong>
+          <code>docker stop influxdb</code>
+        </div>
+      </div>
+
+      <div class="container-search-status" *ngIf="containerSearchStatus">
+        <small class="status-message">{{ containerSearchStatus }}</small>
+      </div>
+
+      <div class="docker-container-list" *ngIf="dockerContainers.length > 0">
+        <small class="form-help">
+          Containers encontrados
+          <span *ngIf="dockerSummary">({{ dockerSummary.running }} ativo(s), {{ dockerSummary.stopped }} parado(s))</span>:
+        </small>
+        <div class="container-cards">
+          <div
+            *ngFor="let container of dockerContainers"
+            class="container-card"
+            [ngClass]="'status-' + container.status"
+          >
+            <div class="container-header">
+              <span class="container-icon" *ngIf="container.environment === 'windows'">🪟</span>
+              <span class="container-icon" *ngIf="container.environment === 'wsl'">🐧</span>
+              <span class="container-name">{{ container.name }}</span>
+            </div>
+            <div class="container-details">
+              <span class="container-image">{{ container.image }}</span>
+              <span class="container-port">Porta: {{ container.port }}</span>
+            </div>
+            <div class="container-status">
+              <span class="status-badge" [ngClass]="'badge-' + container.status">
+                {{ container.status === 'running' ? '✅ Ativo' : '⛔ Parado' }}
+              </span>
+            </div>
+            <div class="container-actions">
+              <button
+                *ngIf="container.status === 'running'"
+                type="button"
+                class="btn btn-mini btn-primary"
+                (click)="useDockerContainer(container)"
+              >
+                🔗 Usar Este Container
+              </button>
+              <button
+                *ngIf="container.status === 'stopped'"
+                type="button"
+                class="btn btn-mini btn-success"
+                (click)="startDockerContainer(container)"
+              >
+                ▶️ Iniciar Container
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="form-row">
@@ -93,7 +259,7 @@
   <div class="config-info">
     <h3>Informações</h3>
     <ul>
-      <li>Esta aplicação suporta InfluxDB versão 1.8</li>
+      <li>Esta aplicação suporta InfluxDB versão 1.11.8</li>
       <li>A URL deve incluir o protocolo (http:// ou https://)</li>
       <li>Credenciais são armazenadas localmente no navegador</li>
       <li>Teste a conexão antes de salvar as configurações</li>
