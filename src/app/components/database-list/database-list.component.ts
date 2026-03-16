@@ -160,4 +160,19 @@ export class DatabaseListComponent implements OnInit {
     this.customFilters = [];
     this.saveFiltersToStorage();
   }
+
+  copyFilteredMeasurements(): void {
+    const measurementNames = this.filteredMeasurements.map(m => m.name).join('\n');
+    
+    if (measurementNames) {
+      navigator.clipboard.writeText(measurementNames).then(() => {
+        alert(`${this.filteredMeasurements.length} measurement(s) copiado(s) para a área de transferência!`);
+      }).catch(err => {
+        console.error('Erro ao copiar para área de transferência:', err);
+        alert('Erro ao copiar para área de transferência');
+      });
+    } else {
+      alert('Nenhum measurement para copiar');
+    }
+  }
 }

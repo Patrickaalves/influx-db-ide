@@ -39,8 +39,18 @@
   <div class="measurements-section" *ngIf="selectedDatabase">
     <div class="section-header">
       <h3>Measurements</h3>
-      <div class="measurements-count" *ngIf="measurements.length > 0">
-        {{ filteredMeasurements.length }} / {{ measurements.length }}
+      <div class="header-actions" *ngIf="measurements.length > 0">
+        <div class="measurements-count">
+          {{ filteredMeasurements.length }} / {{ measurements.length }}
+        </div>
+        <button
+          class="btn-copy"
+          (click)="copyFilteredMeasurements()"
+          [disabled]="filteredMeasurements.length === 0"
+          title="Copiar measurements visíveis para a área de transferência"
+        >
+          📋 Copiar
+        </button>
       </div>
     </div>
 

@@ -60,6 +60,12 @@
     }
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
   .measurements-count {
     background-color: var(--primary-color);
     color: white;
@@ -67,6 +73,37 @@
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 600;
+  }
+
+  .btn-copy {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      background-color: #45a049;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 }
 
