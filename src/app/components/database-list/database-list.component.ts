@@ -163,7 +163,7 @@ export class DatabaseListComponent implements OnInit {
 
   copyFilteredMeasurements(): void {
     const measurementNames = this.filteredMeasurements.map(m => m.name).join('\n');
-    
+
     if (measurementNames) {
       navigator.clipboard.writeText(measurementNames).then(() => {
         alert(`${this.filteredMeasurements.length} measurement(s) copiado(s) para a área de transferência!`);
